@@ -85,17 +85,24 @@ if ( ! empty( $_POST ) && check_admin_referer( basename( __FILE__ ), 'ucc_ma_use
 			case 'ban':
 				if ( ! current_user_can( 'promote_users' ) )
 			    		wp_die( __( 'You can&#8217;t edit that user.' ) );
-				
-				$editable_roles = get_editable_roles();
-				if ( empty( $editable_roles['suspended'] ) )
-					wp_die( __( 'You can&#8217;t give users that role.' ) );
-				    
+					    
 				foreach ( $ids as $id ) {
-			        	if ( ! current_user_can( 'promote_user', $id ) )
-			        		wp_die( __( 'You can&#8217;t edit that user.' ) );
+			       	if ( ! current_user_can( 'promote_user', $id ) )
+			       		wp_die( __( 'You can&#8217;t edit that user.' ) );
 				
+					//buddypress compatibility
+			        if(function_exists('bp_core_process_spammer_status')) {
+			        	bp_core_process_spammer_status( $id, 'spam', true);
+			        } else if (is_multisite()) {
+			        	update_user_status( $id, 'spam', true);
+			        }
+
+			        //Assign 'spammer' role if it exists
+			        $editable_roles = get_editable_roles();
+			        if ( ! empty( $editable_roles['spammer'] ) ) {
 			        	$user = new WP_User( $id );
-					$user->set_role( 'suspended' );
+			        	$user->set_role( 'spammer' );
+			        }
 				}
 				$msg .= 'Users banned.';
 				break;
