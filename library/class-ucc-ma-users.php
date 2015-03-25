@@ -78,6 +78,7 @@ class UCC_Member_Approval extends WP_List_Table {
 			'profile'  => __( 'Profile' ),
 			'activation'  => __( 'Pending Activation' ),
 			'registerdate' => __( 'Registration Date' ),
+			'pinterest' => __( 'Pinterest URL' ),
 			'notes' => __( 'Notes' ),
 			'approve_member' => __( 'Approve Member' )
 		);
@@ -213,6 +214,11 @@ class UCC_Member_Approval extends WP_List_Table {
 					$registerdate = ( ( $time = strtotime ( get_date_from_gmt ( $user_object->user_registered ) ) ) ) ? esc_html( date ("D M jS, Y", $time ) ) . '<br /><small>@ precisely ' . esc_html( date ( "g:i a", $time ) ) . '</small>' : "—";
 					$r .= "<td $attributes>";
 					$r .= $registerdate;
+					$r .= "</td>";
+					break;
+				case 'pinterest':
+					$r .= "<td>";
+					$r .= xprofile_get_field_data( 'Pinterest URL',  $user_object->ID  );
 					$r .= "</td>";
 					break;
 				case 'notes':
