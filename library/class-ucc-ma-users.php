@@ -76,8 +76,8 @@ class UCC_Member_Approval extends WP_List_Table {
 			'username' => __( 'Username' ),
 			'email'    => __( 'E-mail Address' ),
 			'profile'  => __( 'Profile' ),
-			'activation'  => __( 'Pending Activation' ),
 			'registerdate' => __( 'Registration Date' ),
+			'about'  => __( 'About' ),
 			'pinterest' => __( 'Pinterest URL' ),
 			'notes' => __( 'Notes' ),
 			'approve_member' => __( 'Approve Member' )
@@ -199,15 +199,9 @@ class UCC_Member_Approval extends WP_List_Table {
 						$r .= '<a target="_blank" href="' . bp_core_get_user_domain( $user_object->ID ) . '">' . __( 'View Profile' ) . '</a>';				
 					$r .= "</td>";
 					break;
-				case 'activation':
-					$key = get_user_meta( $user_object->ID, 'activation_key' );
-					$status = (int) $user_object->user_status;
-					if ( ! empty( $key ) && ( $status == 2 ) )
-						$value = 'Email not validated.';
-					else
-						$value = '';
-					$r .= "<td $attributes>";
-					$r .= $value;
+				case 'about':
+					$r .= "<td>";
+					$r .= wp_trim_words(xprofile_get_field_data( 'About me and my partner(s)',  $user_object->ID  ), 20);
 					$r .= "</td>";
 					break;
 				case 'registerdate':
